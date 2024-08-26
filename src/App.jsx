@@ -39,6 +39,14 @@ const App = () => {
 		next = pokemonList.find(({ id }) => id === pokemonId + 1);
 	}
 
+	if (!next) {
+		next = pokemonList[0];
+	}
+
+	if (!previous) {
+		previous = pokemonList[pokemonList.length - 1];
+	}
+
 	return (
 		<Routes>
 			<Route
