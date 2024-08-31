@@ -6,4 +6,10 @@ describe("Pokedex", function () {
 			"Pokémon and Pokémon character names are trademarks of Nintendo."
 		);
 	});
+
+	it("single pokemon page can be opened", function () {
+		cy.visit("http://localhost:5000/pokemon/ivysaur");
+		cy.contains("ivysaur");
+		cy.contains("chlorophyll");
+	});
 });
