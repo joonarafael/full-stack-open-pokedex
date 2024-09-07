@@ -9,6 +9,9 @@ on:
     branches: [main]
     types: [opened, synchronize]
 
+env:
+  CONDITION: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip') }}
+
 jobs:
   simple_deployment_pipeline:
     runs-on: ubuntu-20.04
@@ -33,12 +36,12 @@ jobs:
           wait-on: http://localhost:5000
 
       - name: Trigger deployment
-        if: ${{ github.event_name == 'push' }}
+        if: ${{ env.CONDITION == 'true' }}
         run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_DH_SERVICE_ID }}?key=${{ secrets.RENDER_DH_API_KEY }}
 
   tag_release:
     needs: simple_deployment_pipeline
-    if: ${{ github.event_name == 'push' }}
+    if: ${{ env.CONDITION == 'true' }}
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4
