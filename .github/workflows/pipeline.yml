@@ -41,20 +41,20 @@ jobs:
         run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_DH_SERVICE_ID }}?key=${{ secrets.RENDER_DH_API_KEY }}
 
       - name: Webhook (if deploy success)
+        uses: "Ilshidur/action-discord@0c4b27844ba47cb1c7bee539c8eead5284ce9fa9"
         if: ${{ steps.deploy.outcome == 'success' }}
-        uses: rjstone/discord-webhook-notify@v1.0.4
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         with:
-          severity: info
-          details: Pokedex deploy successful!
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+          args: Project {{ EVENT_PAYLOAD.repository.full_name }} has been deployed.
 
       - name: Webhook (if failure)
-        uses: rjstone/discord-webhook-notify@v1.0.4
+        uses: "Ilshidur/action-discord@0c4b27844ba47cb1c7bee539c8eead5284ce9fa9"
         if: ${{ failure() }}
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         with:
-          severity: error
-          details: Pokedex buid failed.
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          args: Project {{ EVENT_PAYLOAD.repository.full_name }} build has failed.
 
   tag_release:
     needs: simple_deployment_pipeline
