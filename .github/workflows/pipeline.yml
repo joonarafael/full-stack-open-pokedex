@@ -44,18 +44,16 @@ jobs:
         if: ${{ steps.deploy.outcome == 'success' }}
         uses: rjstone/discord-webhook-notify@v1.0.4
         with:
-          username: joonarafael
-          details: Deploy successful for commit [${{ github.sha }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}).
           severity: info
+          details: Pokedex deploy successful!
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
       - name: Webhook (if failure)
         uses: rjstone/discord-webhook-notify@v1.0.4
         if: ${{ failure() }}
         with:
-          username: joonarafael
-          details: Build failed for commit [${{ github.sha }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}).
           severity: error
+          details: Pokedex buid failed.
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
 
   tag_release:
